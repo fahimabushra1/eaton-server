@@ -3,7 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT|| 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 app.use(cors());
 app.use(express.json());
@@ -27,25 +27,25 @@ async function run() {
     const userCollection = client.db("userDB").collection("userCollection");
 
 
-    app.post('/food', async (req,res)=>{
+    app.post('/dashboard/food', async (req,res)=>{
       const foodData = req.body;
       const result = await foodCollection.insertOne(foodData);
       res.send(result)
   })
 
-  app.get('/food', async (req,res)=>{
+  app.get('/dashboard/food', async (req,res)=>{
     const foodData = foodCollection.find();
     const result = await foodData.toArray();
     res.send(result);
   })
 
-  app.get('/food/:id', async (req,res)=>{
+  app.get('/dashboard/food/:id', async (req,res)=>{
     const id = req.params.id;
     const foodData =  await foodCollection.findOne({_id:new ObjectId(id)});
     res.send(foodData);
   })
 
-  app.patch('/food/:id', async (req,res)=>{
+  app.patch('/dashboard/food/:id', async (req,res)=>{
     const id = req.params.id;
     const updatedData = req.body;
     const result = await foodCollection.updateOne({_id:new ObjectId(id)},
@@ -54,7 +54,7 @@ async function run() {
     res.send(result);
   })
 
-  app.delete('/food/:id',async (req,res)=>{
+  app.delete('/dashboard/food/:id',async (req,res)=>{
     const id = req.params.id;
     const result = foodCollection.deleteOne({_id:new ObjectId(id)});
     res.send(result);
